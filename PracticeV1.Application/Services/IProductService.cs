@@ -14,6 +14,6 @@ namespace PracticeV1.Business.Service.Product
         Task<Domain.Entity.Product> CreateProductAsync(ProductCreate productCreate);
         Task<Domain.Entity.Product?> UpdateProductAsync(int id, ProductCreate productCreate);
         Task<bool> DeleteProductAsync(int id);
-        Task<List<Domain.Entity.Product>> GetProductsByCriteriaAsync(string name);
+        Task<bool> DecreaseStockAsync(int productId, int quantity);
     }
 }

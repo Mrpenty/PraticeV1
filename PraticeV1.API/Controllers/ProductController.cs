@@ -34,7 +34,6 @@ namespace PraticeV1.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
-        [Authorize(Roles = "Admin")]
         [HttpPut("Admin/{id}")]
         public async Task<IActionResult> UpdateProductAsync(int id, [FromBody] ProductCreate productCreate)
         {
@@ -57,7 +56,6 @@ namespace PraticeV1.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
-        [Authorize(Roles = "Admin")]
         [HttpPost("Admin/Create")]
         public async Task<IActionResult> CreateProductAsync([FromBody] ProductCreate productCreate)
         {
@@ -95,7 +93,7 @@ namespace PraticeV1.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpDelete("Admin/Delete")]
         public async Task<IActionResult> DeleteProductAsync(int id)
         {

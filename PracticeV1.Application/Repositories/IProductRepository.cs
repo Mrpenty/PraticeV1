@@ -17,6 +17,7 @@ namespace PracticeV1.Application.Repository
         Task<Product?> UpdateProductAsync(int id, ProductCreate productCreate);
         Task<bool> DeleteProductAsync(int id);
         Task<List<Product>> GetProductsByCriteriaAsync(string name);
-      
+        Task<bool> DecreaseStockAsync(int productId, int quantity);
+
     }
 }

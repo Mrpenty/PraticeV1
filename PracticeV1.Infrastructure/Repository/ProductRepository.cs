@@ -36,7 +36,7 @@ namespace PracticeV1.Business.Repository
             return product;
 
         }
-        
+
         public async Task<bool> DeleteProductAsync(int id)
         {
             var product = _context.Products.Find(id);
@@ -49,10 +49,10 @@ namespace PracticeV1.Business.Repository
             return true;
         }
 
-            public async Task<List<Product>> GetAllProductsAsync()
-            {
-                return await _context.Products.ToListAsync();
-            }
+        public async Task<List<Product>> GetAllProductsAsync()
+        {
+            return await _context.Products.ToListAsync();
+        }
 
         public async Task<Product?> GetProductByIdAsync(int id)
         {
@@ -79,6 +79,24 @@ namespace PracticeV1.Business.Repository
             _context.Products.Update(existingProduct);
             await _context.SaveChangesAsync();
             return existingProduct;
+        }
+
+        public async Task<bool> DecreaseStockAsync(int productId, int quantity)
+        {
+            var product = await _context.Products.FindAsync(productId);
+            if (product == null)
+            {
+                return false;
+            }
+            // Assuming there is a Stock property in Product entity
+            if (product.QuantityInStock < quantity)
+            {
+                return false; // Not enough stock
+            }
+            product.QuantityInStock -= quantity;
+            return true;
+
+
         }
     }
 }

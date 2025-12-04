@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace PracticeV1.Application.DTO.Order
+{
+    public class OrderItemCreate
+    {
+    
+        public int ProductId { get; set; }
+        public int Quantity { get; set; }
+    }
+}

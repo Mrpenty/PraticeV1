@@ -16,7 +16,10 @@ namespace PracticeV1.Application.DTO.Product
         public decimal Price { get; set; }
 
         public string? Description { get; set; }
+         public int QuantityInStock { get; set; }
 
-       
-     }
+
+
+
+    }
 }

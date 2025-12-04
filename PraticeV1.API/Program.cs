@@ -1,16 +1,26 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using PracticeV1.Application.DTO.Category;
+using PracticeV1.Application.DTO.Order;
+using PracticeV1.Application.Repositories;
 using PracticeV1.Application.Repository;
 using PracticeV1.Application.Service;
+using PracticeV1.Application.Services;
+using PracticeV1.Application.Validation;
 using PracticeV1.Business.Repository;
 using PracticeV1.Business.Service.Product;
 using PracticeV1.Domain.Entity;
 using PracticeV1.Infrastructure.Data;
+using PracticeV1.Infrastructure.Repository;
+using PracticeV1.Infrastructure.Service;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +29,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
         options.JsonSerializerOptions.PropertyNameCaseInsensitive = true);
+   
 builder.Services.AddDbContext<PRDBContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("Mycnn")));
@@ -96,11 +107,23 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IUnitOfWork, UnityOfWork>();
+builder.Services.AddScoped<IOderService, OderService>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IValidator<CreateOrder>, CreateOrderValidator>();
+builder.Services.AddScoped<IValidator<OrderItemCreate>, OrderItemCreateValidator>();
+builder.Services.AddScoped<IValidator<CategoryCreate>, CategoryValidation>();
 
+
+///Validation 
 
 builder.Services.AddCors(options =>
 {

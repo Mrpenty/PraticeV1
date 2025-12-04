@@ -41,5 +41,24 @@ namespace PracticeV1.Application.Service
         {
             return await _productRepository.UpdateProductAsync(id, productCreate);
         }
+
+
+        public async Task<bool> DecreaseStockAsync(int productId, int quantity)
+        {
+            var product = await _productRepository.GetProductByIdAsync(productId);
+            if (product == null || product.QuantityInStock < quantity)
+            {
+                return false; 
+            }
+            product.QuantityInStock -= quantity;
+            await _productRepository.UpdateProductAsync(productId, new ProductCreate
+            {
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                QuantityInStock = product.QuantityInStock
+            });
+            return true;
+        }
     }
 }
