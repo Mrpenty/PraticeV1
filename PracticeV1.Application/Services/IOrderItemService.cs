@@ -9,12 +9,9 @@ using System.Threading.Tasks;
 
 namespace PracticeV1.Application.Services
 {
-    public interface IOderService
+    public interface IOrderItemService
     {
-        Task<List<Order>> GetAllOrdersAsync();
-        Task<Order> CreateOrderAsync(int userId, CreateOrder createOrder);
-
-        Task<PageResponse<Order>> GetAllOrdersPageAsync(PageRequest request);
-
+        Task<List<OrderItem>> GetOrderItemsByUserID(int userId);
+        Task<PageResponse<OrderHistoryItem>> GetOrderItemsPageByUserID(int userId, PageRequest request);
     }
 }

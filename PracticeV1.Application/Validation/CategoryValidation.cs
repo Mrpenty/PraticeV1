@@ -16,10 +16,10 @@ namespace PracticeV1.Application.Validation
         public CategoryValidation(ICategoryRepository categoryRepository)
         {
             RuleFor(c => c.Name)
-                .NotEmpty().WithMessage("Category name is required.")
-                .MaximumLength(100).WithMessage("Category name must not exceed 100 characters.");
+                .NotEmpty().WithMessage("yêu cầu tên danh mục .")
+                .MaximumLength(100).WithMessage("Tên danh mục ko được quá 100 kí tự ");
             RuleFor(c => c.Description)
-                .MaximumLength(500).WithMessage("Category description must not exceed 500 characters.");
+                .MaximumLength(500).WithMessage("Mô tả danh mục ko được quá 500 kí tự .");
             RuleFor(c => c.Name)
              .MustAsync(async (name, cancellation) =>
              {

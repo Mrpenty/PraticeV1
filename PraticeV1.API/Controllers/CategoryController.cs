@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 using PracticeV1.Application.DTO.Category;
 using PracticeV1.Application.DTO.Order;
+using PracticeV1.Application.DTO.Page;
 using PracticeV1.Application.Services;
 
 namespace PraticeV1.API.Controllers
@@ -23,11 +24,11 @@ namespace PraticeV1.API.Controllers
         }
 
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAllCategoriesAsync()
+        public async Task<IActionResult> GetAllCategoriesAsync([FromQuery] PageRequest request)
         {
             try
             {
-                var categories = await _categoryService.GetAllCategoriesAsync();
+                var categories = await _categoryService.GetCategoriesPageAsync(request);
                 return Ok(categories);
             }
             catch (Exception ex)
@@ -47,10 +48,10 @@ namespace PraticeV1.API.Controllers
                 var createdCategory = await _categoryService.CreateCategoryAsync(categoryName);
                 return Ok(createdCategory);
             }
-            catch (Exception ex)
+            catch (ValidationException ex)
             {
                 _logger.LogError(ex, "An error occurred while creating a new category.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+                return BadRequest(ex.Errors.Select(e => e.ErrorMessage));
             }
         }
 
@@ -63,7 +64,7 @@ namespace PraticeV1.API.Controllers
                 var deleted = await _categoryService.DeleteCategoryAsync(id);
                 if (!deleted)
                 {
-                    return NotFound();
+                    return NotFound("dw");
                 }
                 return NoContent();
             }

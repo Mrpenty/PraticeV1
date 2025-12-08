@@ -18,6 +18,7 @@ namespace PracticeV1.Domain.Entity
         public DateTime UpdatedAt { get; set; }
         public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;
+        public ProductStatus Status { get; set; } = ProductStatus.InStock;
 
     }
 

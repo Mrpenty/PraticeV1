@@ -1,4 +1,6 @@
-﻿using PracticeV1.Application.DTO.Product;
+﻿using Microsoft.Extensions.Caching.Memory;
+using PracticeV1.Application.DTO.Page;
+using PracticeV1.Application.DTO.Product;
 using PracticeV1.Application.Repository;
 using PracticeV1.Business.Service.Product;
 using PracticeV1.Domain.Entity;
@@ -13,17 +15,31 @@ namespace PracticeV1.Application.Service
     public class ProductService : IProductService
     {
         public readonly IProductRepository _productRepository;
-        public ProductService(IProductRepository productRepository)
+        public readonly IMemoryCache _memoryCache;
+        private const string ProductCacheKey = "Product";
+        private const string ProductPageCacheKey = "ProductPage";
+
+
+        public ProductService(IProductRepository productRepository, IMemoryCache memoryCache)
         {
             _productRepository = productRepository;
+            _memoryCache = memoryCache; 
         }
         public async Task<Product> CreateProductAsync(ProductCreate productCreate)
         {
-            return await _productRepository.CreateProductAsync(productCreate);
+            var product = await _productRepository.CreateProductAsync(productCreate);
+
+            _memoryCache.Remove(ProductCacheKey);
+            return product; 
         }
         public async Task<bool> DeleteProductAsync(int id)
         {
-            return await _productRepository.DeleteProductAsync(id);
+            var result = await _productRepository.DeleteProductAsync(id);
+            if (result)
+            {
+                _memoryCache.Remove(ProductCacheKey);
+            }
+            return result;
         }
         public async Task<List<Product>> GetAllProductsAsync()
         {
@@ -39,9 +55,14 @@ namespace PracticeV1.Application.Service
         }
         public async Task<Product?> UpdateProductAsync(int id, ProductCreate productCreate)
         {
-            return await _productRepository.UpdateProductAsync(id, productCreate);
+            var product = await _productRepository.UpdateProductAsync(id, productCreate);
+            if (product != null)
+            {
+                _memoryCache.Remove(ProductCacheKey);
+            }
+            return product;
         }
-
+        
 
         public async Task<bool> DecreaseStockAsync(int productId, int quantity)
         {
@@ -59,6 +80,18 @@ namespace PracticeV1.Application.Service
                 QuantityInStock = product.QuantityInStock
             });
             return true;
+        }
+
+        public async Task<PageResponse<Product?>> GetProductsPageAsync(PageRequest request)
+        {
+            var cateKey = string.Format(ProductPageCacheKey, request.PageNumber, request.PageSize, request.SearchTerm ?? null);
+            if(_memoryCache.TryGetValue(cateKey, out PageResponse<Product?> cachedProducts))
+            {
+                return cachedProducts;
+            }
+            var productsPage = await _productRepository.GetPagedProductsAsync(request);
+            _memoryCache.Set(cateKey, productsPage, TimeSpan.FromSeconds(10));
+            return productsPage;
         }
     }
 }

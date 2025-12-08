@@ -4,14 +4,14 @@ using PracticeV1.Domain.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace PracticeV1.Application.Repositories
 {
-    public interface IOrderRepository : IBaseRepository<Order>
+    public interface IOrderItemRepository : IBaseRepository<OrderItem> 
     {
-       public Task<PageResponse<Order>> GetPagedOrdersAsync(PageRequest pageRequest, Expression<Func<Order, bool>>? filter = null, Func<IQueryable<Order>, IOrderedQueryable<Order>>? orderBy = null);
+        Task<List<OrderItem>> GetOrderItemsByUserID(int userId);
+        Task<PageResponse<OrderHistoryItem>> GetOrderItemsPageByUserID(int userId, PageRequest request);   
     }
 }

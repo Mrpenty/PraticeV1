@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PracticeV1.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using PracticeV1.Infrastructure.Data;
 namespace PracticeV1.Infrastructure.Migrations
 {
     [DbContext(typeof(PRDBContext))]
-    partial class PRDBContextModelSnapshot : ModelSnapshot
+    [Migration("20251208045635_int4")]
+    partial class int4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

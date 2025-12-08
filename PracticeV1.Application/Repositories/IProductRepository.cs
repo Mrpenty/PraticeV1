@@ -1,10 +1,12 @@
-﻿using PracticeV1.Application.DTO.Product;
+﻿using PracticeV1.Application.DTO.Page;
+using PracticeV1.Application.DTO.Product;
+using PracticeV1.Domain.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using PracticeV1.Domain.Entity;
 
 
 namespace PracticeV1.Application.Repository
@@ -18,6 +20,8 @@ namespace PracticeV1.Application.Repository
         Task<bool> DeleteProductAsync(int id);
         Task<List<Product>> GetProductsByCriteriaAsync(string name);
         Task<bool> DecreaseStockAsync(int productId, int quantity);
+
+        Task<PageResponse<Product>> GetPagedProductsAsync(PageRequest request, Expression<Func<Product, bool>>? fliter = null, Func<IQueryable<Product>, IOrderedQueryable<Product>>? orderBy = null);
 
     }
 }

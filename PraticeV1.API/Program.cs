@@ -18,9 +18,11 @@ using PracticeV1.Infrastructure.Data;
 using PracticeV1.Infrastructure.Repository;
 using PracticeV1.Infrastructure.Service;
 using System;
+using System.ComponentModel;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-
+using System.Text.Json.Serialization;
+using PracticeV1.Domain.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,7 +30,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
-        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true);
+    {
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.JsonSerializerOptions.Converters.Add(new PracticeV1.Domain.Common.DateTimeConverter("dd/MM/yyyy HH:mm"));
+    });
+
+    
+       
    
 builder.Services.AddDbContext<PRDBContext>(options =>
     options.UseSqlServer(
@@ -121,8 +130,11 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IValidator<CreateOrder>, CreateOrderValidator>();
 builder.Services.AddScoped<IValidator<OrderItemCreate>, OrderItemCreateValidator>();
 builder.Services.AddScoped<IValidator<CategoryCreate>, CategoryValidation>();
+builder.Services.AddScoped<IOrderItemService, OrderItemService>();
+builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
-
+builder.Services.AddMemoryCache();
 ///Validation 
 
 builder.Services.AddCors(options =>

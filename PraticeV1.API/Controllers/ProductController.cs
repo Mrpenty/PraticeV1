@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PracticeV1.Application.DTO.Page;
 using PracticeV1.Application.DTO.Product;
 using PracticeV1.Business.Service.Product;
 
@@ -21,11 +22,11 @@ namespace PraticeV1.API.Controllers
 
         [HttpGet("GetAll")]
 
-        public async Task<IActionResult> GetAllProductsAsync()
+        public async Task<IActionResult> GetAllProductsAsync([FromQuery] PageRequest request)
         {
             try
             {
-                var products = await _productService.GetAllProductsAsync();
+                var products = await _productService.GetProductsPageAsync(request);
                 return Ok(products);
             }
             catch (Exception ex)

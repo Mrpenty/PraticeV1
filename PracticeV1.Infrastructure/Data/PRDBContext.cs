@@ -37,95 +37,61 @@ namespace PracticeV1.Infrastructure.Data
                 .HasForeignKey(oi => oi.OrderId);
 
 
-        //    builder.Entity<Category>().HasData(
-        //        new Category
-        //        {
-        //            Id = 1,
-        //            Name = "Electronics",
-        //            Description = "Electronic gadgets and devices",
-        //            CreatedAt = DateTime.UtcNow,
-        //            UpdatedAt = DateTime.UtcNow
-        //        },
-        //        new Category
-        //        {
-        //            Id = 2,
-        //            Name = "Books",
-        //            Description = "Various kinds of books",
-        //            CreatedAt = DateTime.UtcNow,
-        //            UpdatedAt = DateTime.UtcNow
-        //        }
-        //    );
+            builder.Entity<Category>().HasData(
+                new Category
+                {
+                    Id = 8,
+                    Name = "Movie",
+                    Description = "List of moview ",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                },
+                new Category
+                {
+                    Id = 9,
+                    Name = "Tools",
+                    Description = "Various kinds of tools",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                }
+            );
 
-        //    builder.Entity<Product>().HasData(
-        //        new Product
-        //        {
-        //            Id = 1,
-        //            Name = "Smartphone",
-        //            Description = "Latest model smartphone",
-        //            Price = 699.99m,
-        //            QuantityInStock = 50,
-        //            CategoryId = 1,
-        //            CreatedAt = DateTime.UtcNow,
-        //            UpdatedAt = DateTime.UtcNow
-        //        },
-        //        new Product
-        //        {
-        //            Id = 2,
-        //            Name = "Laptop",
-        //            Description = "High performance laptop",
-        //            Price = 1299.99m,
-        //            QuantityInStock = 30,
-        //            CategoryId = 1,
-        //            CreatedAt = DateTime.UtcNow,
-        //            UpdatedAt = DateTime.UtcNow
-        //        },
-        //        new Product
-        //        {
-        //            Id = 2,
-        //            Name = "Science Fiction Novel",
-        //            Description = "A thrilling sci-fi adventure",
-        //            Price = 19.99m,
-        //            QuantityInStock = 100,
-        //            CategoryId = 2,
-        //            CreatedAt = DateTime.UtcNow,
-        //            UpdatedAt = DateTime.UtcNow
-        //        }
-        //    );
-        //    builder.Entity<Order>().HasData(
-        //        new Order
-        //        {
-        //            Id = 1,
-        //            UserId = 11,
-        //            OrderDate = DateTime.UtcNow,
-        //            TotalAmount = 719.98m
-
-        //        },
-        //        new Order
-        //        {
-        //            Id = 2,
-        //            UserId = 11,
-        //            OrderDate = DateTime.UtcNow,
-        //            TotalAmount = 699.99m
-        //        }
-        //    );
-        //    builder.Entity<OrderItem>().HasData(
-        //        new OrderItem
-        //        {
-        //            Id = 1,
-        //            OrderId = 1,
-        //            ProductId = 11,
-        //            Quantity = 1,
-        //            UnitPrice = 699.99m
-        //        },
-        //        new OrderItem
-        //        {
-        //            Id = 2,
-        //            OrderId = 2,
-        //            ProductId = 12,
-        //            Quantity = 1,
-        //            UnitPrice = 19.99m
-        //        }
-        //    );
+            builder.Entity<Product>().HasData(
+                new Product
+                {
+                    Id=16,
+                    Name = "Beatifullboy",
+                    Description = "Moview about a boy",
+                    Price = 699.99m,
+                    QuantityInStock = 50,
+                    CategoryId = 8,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                },
+                new Product
+                {
+                   Id=17,
+                    Name = "Hammer",
+                    Description = "A durable tool for construction tasks",
+                    Price = 19.99m,
+                    QuantityInStock = 50,
+                    CategoryId = 9,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                },
+                new Product
+                {
+                    Id=18,
+                    Name = "Science Fiction Novel",
+                    Description = "A thrilling sci-fi adventure",
+                    Price = 19.99m,
+                    QuantityInStock = 100,
+                    CategoryId = 8,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                }
+            );
+           
 
         }
 

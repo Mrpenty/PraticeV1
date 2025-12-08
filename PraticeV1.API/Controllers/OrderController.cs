@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PracticeV1.Application.DTO.Order;
+using PracticeV1.Application.DTO.Page;
 using PracticeV1.Application.Services;
 
 namespace PraticeV1.API.Controllers
@@ -12,21 +13,23 @@ namespace PraticeV1.API.Controllers
     public class OrderController : ControllerBase
     {
         public readonly IOderService _orderService;
+        public readonly IOrderItemService _orderItemService;
         public readonly ILogger<OrderController> _logger;
         private readonly IValidator<CreateOrder> _validator;
-        public OrderController(IOderService orderService, ILogger<OrderController> logger, IValidator<CreateOrder> validator)
+        public OrderController(IOderService orderService, ILogger<OrderController> logger, IValidator<CreateOrder> validator, IOrderItemService orderItemService)
         {
             _orderService = orderService;
             _logger = logger;
             _validator = validator;
+            _orderItemService = orderItemService;
         }
 
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAllOrdersAsync()
+        public async Task<IActionResult> GetAllOrdersAsync([FromQuery] PageRequest pageRequest)
         {
             try
             {
-                var orders = await _orderService.GetAllOrdersAsync();
+                var orders = await _orderService.GetAllOrdersPageAsync(pageRequest);
                 return Ok(orders);
             }
             catch (Exception ex)
@@ -47,13 +50,21 @@ namespace PraticeV1.API.Controllers
             {
               
                 var createdOrder = await _orderService.CreateOrderAsync(userId, createOrder);
-                return Ok(createdOrder);
+                return Ok($"đặt đơn {createdOrder.Id} thành công ");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while creating a new order.");
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
+        }
+
+        [HttpGet("UrOder")]
+        public async Task<IActionResult> GetOrderItemsByUserAsync([FromQuery] PageRequest pageRequest)
+        {
+            var userId = Convert.ToInt32(User.FindFirst("UserId")?.Value);
+            var orderItems = await _orderItemService.GetOrderItemsPageByUserID(userId, pageRequest);
+            return Ok(orderItems);
         }
     }
 }

@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PracticeV1.Application.DTO.Order;
+using PracticeV1.Application.DTO.Page;
 using PracticeV1.Application.Repositories;
 using PracticeV1.Application.Repository;
 using PracticeV1.Application.Services;
@@ -17,16 +19,20 @@ namespace PracticeV1.Infrastructure.Service
     public class OderService : IOderService
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly UserManager<User> _userManager;
         private readonly IProductRepository _productRepository;
         private readonly ILogger<OderService> _logger;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IEmailService _emailService;
 
-        public OderService(IOrderRepository orderRepository, ILogger<OderService> logger, IUnitOfWork unitOfWork, IProductRepository productRepository)
+        public OderService(IOrderRepository orderRepository, ILogger<OderService> logger, IUnitOfWork unitOfWork, IProductRepository productRepository, IEmailService emailService, UserManager<User> userManager)
         {
             _orderRepository = orderRepository;
             _logger = logger;
             _unitOfWork = unitOfWork;
             _productRepository = productRepository;
+            _emailService = emailService;
+            _userManager = userManager;
         }
         public async Task<List<Order>> GetAllOrdersAsync()
         {
@@ -66,7 +72,9 @@ namespace PracticeV1.Infrastructure.Service
                     {
                         UserId = userId,
                         OrderDate = DateTime.UtcNow,
-                        TotalAmount = products.Price*createOrder.Quantity,
+                        TotalAmount = products.Price * createOrder.Quantity,
+                        StatusOder = StatusOder.Pending,
+                        ShippingAddress = createOrder.ShippingAddress,
                     };
                     var orderItem = new OrderItem
                     {
@@ -78,11 +86,20 @@ namespace PracticeV1.Infrastructure.Service
                     order.OrderItems.Add(orderItem);
 
                 
-                 var createdOrder = await _orderRepository.CreateAsync(order);
-               
+                 var createdOrders = await _orderRepository.CreateAsync(order);
+                await _unitOfWork.SaveChangesAsync();
+                var user = await _userManager.FindByIdAsync(userId.ToString()); 
 
+                await _emailService.SendOrderConfirmationAsync(
+                   orderId: createdOrders.Id,
+                   customerName: user.FullName ?? "Khách hàng",
+                   customerEmail: user.Email!,
+                   totalAmount: createdOrders.TotalAmount 
+                );
                 await _unitOfWork.CommitAsync();
-                return createdOrder;
+                return createdOrders;
+
+
             }
             catch (Exception ex)
             {
@@ -92,6 +109,13 @@ namespace PracticeV1.Infrastructure.Service
             }
 
 
+        }
+
+       
+
+        public Task<PageResponse<Order>> GetAllOrdersPageAsync(PageRequest request)
+        {
+            return _orderRepository.GetPagedOrdersAsync(request);
         }
     }
 }

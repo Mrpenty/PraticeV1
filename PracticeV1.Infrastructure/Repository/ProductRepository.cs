@@ -1,18 +1,29 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PracticeV1.Application.DTO.Page;
 using PracticeV1.Application.DTO.Product;
-using PracticeV1.Infrastructure.Data;
-using PracticeV1.Domain.Entity;
 using PracticeV1.Application.Repository;
+using PracticeV1.Domain.Entity;
+using PracticeV1.Infrastructure.Data;
+using PracticeV1.Infrastructure.Repository;
+using System.Linq.Expressions;
 
 
 namespace PracticeV1.Business.Repository
 {
-    public class ProductRepository : IProductRepository
+    public class ProductRepository : BaseRepository<Product>,IProductRepository
     {
-        public readonly PRDBContext _context;
-        public ProductRepository(PRDBContext context)
+        public ProductRepository(PRDBContext context) : base(context) { }
+
+        public async Task<PageResponse<Product>> GetPagedProductsAsync(
+         PageRequest pageRequest,
+         Expression<Func<Product, bool>>? filter = null,
+         Func<IQueryable<Product>, IOrderedQueryable<Product>>? orderBy = null)
         {
-            _context = context;
+            return await GetPageAsync(
+                pageRequest: pageRequest,
+                filter: filter,
+                orderBy: orderBy ?? (q => q.OrderByDescending(p => p.CreatedAt))
+            );
         }
 
         public async Task<Product> CreateProductAsync(ProductCreate productCreate)
@@ -88,10 +99,9 @@ namespace PracticeV1.Business.Repository
             {
                 return false;
             }
-            // Assuming there is a Stock property in Product entity
             if (product.QuantityInStock < quantity)
             {
-                return false; // Not enough stock
+                return false; 
             }
             product.QuantityInStock -= quantity;
             return true;

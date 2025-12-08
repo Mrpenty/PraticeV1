@@ -12,5 +12,8 @@ namespace PracticeV1.Application.DTO.Order
         public DateTime OrderDate { get; set; }
         public int ProductId { get; set; }
         public int Quantity { get; set; }
+        public string ShippingAddress { get; set; }
+
+        public string OrderStatus { get; set; } 
     }
 }

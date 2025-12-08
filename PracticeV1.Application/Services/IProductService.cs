@@ -1,4 +1,5 @@
-﻿using PracticeV1.Application.DTO.Product;
+﻿using PracticeV1.Application.DTO.Page;
+using PracticeV1.Application.DTO.Product;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,7 @@ namespace PracticeV1.Business.Service.Product
         Task<Domain.Entity.Product?> UpdateProductAsync(int id, ProductCreate productCreate);
         Task<bool> DeleteProductAsync(int id);
         Task<bool> DecreaseStockAsync(int productId, int quantity);
+        
+        Task<PageResponse<Domain.Entity.Product?>> GetProductsPageAsync(PageRequest request);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
 using PracticeV1.Application.DTO.Category;
+using PracticeV1.Application.DTO.Page;
 using PracticeV1.Application.Repositories;
 using PracticeV1.Application.Services;
 using PracticeV1.Domain.Entity;
@@ -8,6 +9,7 @@ using PracticeV1.Infrastructure.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,6 +27,8 @@ namespace PracticeV1.Infrastructure.Service
             _validator = validator;
 
         }
+
+
 
         public async Task<Category> CreateCategoryAsync(CategoryCreate categoryc)
         {
@@ -81,6 +85,11 @@ namespace PracticeV1.Infrastructure.Service
             {
                 throw;
             }
+        }
+
+        public Task<PageResponse<Category>> GetCategoriesPageAsync(PageRequest request)
+        {
+           return _categoryRepository.GetPagedCategoriesAsync(request);
         }
     }
 }
