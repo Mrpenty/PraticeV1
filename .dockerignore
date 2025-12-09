@@ -1,0 +1,8 @@
+# .dockerignore
+bin/
+obj/
+.vs/
+*.user
+*.suo
+Dockerfile*
+docker-compose*
